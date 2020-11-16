@@ -84,4 +84,4 @@ def pushintosql():
 
 numberlocations()
 pushintosql()
-calcpercent()
+
