@@ -80,7 +80,7 @@ def pushintosql():
 
 
         
- sqlpass = input("Enter SQL Password ")   
+sqlpass = input("Enter SQL Password ")   
 
 numberlocations()
 pushintosql()
