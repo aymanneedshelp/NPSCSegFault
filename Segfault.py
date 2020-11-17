@@ -100,6 +100,7 @@ def sortByDisease():
     f.close()
 
 def zonewise(zone,tableordata):
+        returnlist=[]
         mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
         cursor=mycon.cursor()
         cursor.execute("Select count(*) from coviddataset where zone=%s"%(zone))
@@ -107,6 +108,7 @@ def zonewise(zone,tableordata):
         noofcases=0
         for i in rec:
            noofcases=i[0]
+          
         cursor.execute("Select count(*) from coviddataset where zone=%s and outcome='Dead'"%(zone))
         rec=cursor.fetchall()
         death=0
@@ -162,15 +164,15 @@ def zonewise(zone,tableordata):
         com3=0
         com4=0
         com5=0
-        cursor.execute("Select count(*) from coviddataset where diabetes='TRUE' and Respiratoryillness='TRUE' and AbnormalBloodPressure='FALSE' and zone=%s"%(zone))
+        cursor.execute("Select count(*) from coviddataset where diabetes='TRUE' and Respiratoryillness='TRUE'  and zone=%s"%(zone))
         rec=cursor.fetchall()
         for i in rec:
             com1=i[0]
-        cursor.execute("Select count(*) from coviddataset where AbnormalBloodPressure='TRUE' and Respiratoryillness='TRUE' and Diabetes='FALSE' and zone=%s"%(zone))
+        cursor.execute("Select count(*) from coviddataset where AbnormalBloodPressure='TRUE' and Respiratoryillness='TRUE' and   zone=%s"%(zone))
         rec=cursor.fetchall()
         for i in rec:
             com2=i[0]
-        cursor.execute("Select count(*) from coviddataset where AbnormalBloodPressure='TRUE' and diabetes='TRUE' and Respiratoryillness='FALSE' and zone=%s"%(zone))
+        cursor.execute("Select count(*) from coviddataset where AbnormalBloodPressure='TRUE' and diabetes='TRUE' and  zone=%s"%(zone))
         rec=cursor.fetchall()
         for i in rec:
             com3=i[0]
@@ -179,6 +181,7 @@ def zonewise(zone,tableordata):
         for i in rec:
             com4=i[0]
         com5=com1+com2+com3+com4
+        #print(com1,com2,com3,com4)
         comdeath1=0
         comdeath2=0
         comdeath3=0
@@ -186,29 +189,30 @@ def zonewise(zone,tableordata):
         cursor.execute("Select count(*) from coviddataset where AbnormalBloodPressure='TRUE' and Outcome='Dead' and zone=%s"%(zone))
         rec=cursor.fetchall()
         for i in rec:
-            comdeath1=0
+            comdeath1=i[0]
         cursor.execute("Select count(*) from coviddataset where Respiratoryillness='TRUE' and Outcome='Dead' and zone=%s"%(zone))
         rec=cursor.fetchall()
         for i in rec:
-            comdeath2=0
+            comdeath2=i[0]
         cursor.execute("Select count(*) from coviddataset where diabetes='TRUE' and Outcome='Dead' and zone=%s"%(zone))
         rec=cursor.fetchall()
         for i in rec:
-            comdeath3=0
+            comdeath3=i[0]
         comdeath4=comdeath1+comdeath2+comdeath3
+        #print(comdeath1,comdeath2,comdeath3)
         comdeath5=0
         comdeath6=0
         comdeath7=0
         comdeath8=0
-        cursor.execute("Select count(*) from coviddataset where AbnormalBloodPressure='TRUE' and diabetes='TRUE' and respiratoryillness='FALSE' and Outcome='Dead' and zone=%s"%(zone))
+        cursor.execute("Select count(*) from coviddataset where AbnormalBloodPressure='TRUE' and diabetes='TRUE' and  Outcome='Dead' and zone=%s"%(zone))
         rec=cursor.fetchall()
         for i in rec:
             comdeath5=i[0]
-        cursor.execute("Select count(*) from coviddataset where AbnormalBloodPressure='TRUE' and Respiratoryillness='TRUE' and diabetes='FALSE'and Outcome='Dead' and zone=%s"%(zone))
+        cursor.execute("Select count(*) from coviddataset where AbnormalBloodPressure='TRUE' and Respiratoryillness='TRUE' and Outcome='Dead' and zone=%s"%(zone))
         rec=cursor.fetchall()
         for i in rec:
             comdeath6=i[0]
-        cursor.execute("Select count(*) from coviddataset where Diabetes='TRUE' and Respiratoryillness='TRUE' and AbnormalBloodPressure='FALSE' and Outcome='Dead' and zone=%s"%(zone))
+        cursor.execute("Select count(*) from coviddataset where Diabetes='TRUE' and Respiratoryillness='TRUE' and Outcome='Dead' and zone=%s"%(zone))
         rec=cursor.fetchall()
         for i in rec:
             comdeath7=i[0]
@@ -216,6 +220,7 @@ def zonewise(zone,tableordata):
         rec=cursor.fetchall()
         for i in rec:
             comdeath8=i[0]
+        #print(comdeath5,comdeath6,comdeath7,comdeath8)
         comdeath9=comdeath5+comdeath6+comdeath7+comdeath8
         aged1=0
         aged2=0
@@ -234,12 +239,15 @@ def zonewise(zone,tableordata):
             aged3=i[0]
         populationinfectedp=round(populationinfected,2)
         deathperc=round(deathrate,2)
-        comdeath10=death-(comdeath4+comdeath9)
-        if tableordata==0:
-               return population,noofcases,populationinfectedp,age1,age2,age3,dbcount,respicount,bpcount,com5,death,deathperc,comdeath4,comdeath9,comdeath10,aged1,aged2,aged3
-
-
-        
+        comdeath10=0
+        cursor.execute("Select count(*) from coviddataset where AbnormalBloodPressure='FALSE' and Diabetes='FALSE' and Respiratoryillness='FALSE'and outcome='Dead' and zone=%s"%(zone))
+        rec=cursor.fetchall()
+        for i in rec:
+                comdeath10=i[0]
+       
+        #print(comdeath10)
+        header='ZONE WISE DETAILS'
+       
         txt1="General Information of zone "+str(zone)+"\n"
         data1=[['Population',str(population)],['Number of cases',str(noofcases)],["Percentage of population infected",str(round(populationinfected,2))+"%"]]
         headers=['Particulars','Count']
@@ -250,17 +258,19 @@ def zonewise(zone,tableordata):
         txt2="Age wise analysis of cases of zone "+str(zone)+"\n"
         data2=[['Less than 15 years',str(age1)],['15 to 60 years',str(age2)],['Above 60 years',str(age3)]]
         table2=columnar(data2,headers)
-        txt3="Analysis of cases of "+str(zone)+" based on comorbities"+'\n'
+        txt3="Analysis of cases of zone "+str(zone)+" based on comorbidities"+'\n'
         data3=[["Diabetes",str(dbcount)],["Respiratory disorders",str(respicount)],["Abnormal Blood Pressure",str(bpcount)],["Multiple comorbidities",str(com5)]]
         table3=columnar(data3,headers)
         txt4="Analysis of deaths of zone "+str(zone)+"\n"
-        data4=[["Number of deaths",str(death)],["Death rate",str(round(deathrate,2))+"%"],["Deaths with single comorbidities",str(comdeath4)],["Deaths with multiple comorbidities",str(comdeath9)],["Deaths without comorbidities",str(death-(comdeath4+comdeath9))],['Less than 15 years',str(aged1)],['Between 15 to 60 years',str(aged2)],['Above 60 years',str(aged3)]]
+        data4=[["Number of deaths",str(death)],["Death rate",str(round(deathrate,2))+"%"],["Deaths with single comorbidities",str(comdeath4)],["Deaths with multiple comorbidities",str(comdeath9)],["Deaths without comorbidities",str(comdeath10)],['Less than 15 years',str(aged1)],['Between 15 to 60 years',str(aged2)],['Above 60 years',str(aged3)]]
         
         table4=columnar(data4,headers)
         msg=txt1+table1+txt2+table2+txt3+table3+txt4+table4
+        print(population)
         if tableordata==1:
                 print(msg)
-                return
+        if tableordata==0:
+                return population,noofcases,populationinfectedp,age1,age2,age3,dbcount,respicount,bpcount,com5,death,deathperc,comdeath4,comdeath9,comdeath10,aged1,aged2,aged3
 def intensitymap():
     mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
     cursor=mycon.cursor()
