@@ -1,7 +1,7 @@
 import csv
 import mysql.connector
 import os,sys
-#from columnar import columnar
+from columnar import columnar
 def numberlocations():#Numbering the locations
     if os.path.isfile('Populationnumbered.csv'):
         return
@@ -94,9 +94,9 @@ def sortByDisease():
     	elif i[2]=='True':
     		bp+=1
     f=open('diseases.txt','w')
-    f.write("The number of people with Diabetes is ",diabetes)
-    f.write("The number of people with Abnormal Blood Pressure is ",bp)
-    f.write("The number of people with Respiratory illness is ",ri)
+    f.write("The number of people with Diabetes is "+ str(diabetes)+'\n')
+    f.write("The number of people with Abnormal Blood Pressure is "+str(bp)+'\n')
+    f.write("The number of people with Respiratory illness is "+ str(ri))
     f.close()
 
 def zonewise(zone,tableordata):
