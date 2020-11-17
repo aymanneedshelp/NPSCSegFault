@@ -78,6 +78,20 @@ def pushintosql():
         mycon.commit()
     mycon.close()
 
+def sortByDisease():
+    mycursor=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass, database="covid")
+    cursor=mycursor.cursor()
+    cursor.execute("select Diabetes, Respiratoryillness, AbnormalBloodPressure from coviddataset")
+    record= cursor.fetchall()
+    diabetes, ri, bp = 0,0,0
+    for i in record:
+    	if i[0]=='True':
+    		diabetes+=1
+    	elif i[1]=='True':
+    		ri+=1
+    	elif i[2]=='True':
+    		bp+=1
+    print(diabetes,ri,bp)
 
 sqlpass = input("Enter SQL Password ")
 
