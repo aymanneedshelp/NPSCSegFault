@@ -1,6 +1,7 @@
 import csv
 import mysql.connector
 import os,sys
+from columnar import columnar
 def numberlocations():#Numbering the locations
     if os.path.isfile('Populationnumbered.csv'):
         return
