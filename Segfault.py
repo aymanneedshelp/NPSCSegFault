@@ -181,7 +181,7 @@ def zonewise(zone,tableordata):
         for i in rec:
             com4=i[0]
         com5=com1+com2+com3+com4
-        #print(com1,com2,com3,com4)
+       
         comdeath1=0
         comdeath2=0
         comdeath3=0
@@ -199,7 +199,7 @@ def zonewise(zone,tableordata):
         for i in rec:
             comdeath3=i[0]
         comdeath4=comdeath1+comdeath2+comdeath3
-        #print(comdeath1,comdeath2,comdeath3)
+        
         comdeath5=0
         comdeath6=0
         comdeath7=0
@@ -220,7 +220,7 @@ def zonewise(zone,tableordata):
         rec=cursor.fetchall()
         for i in rec:
             comdeath8=i[0]
-        #print(comdeath5,comdeath6,comdeath7,comdeath8)
+        
         comdeath9=comdeath5+comdeath6+comdeath7+comdeath8
         aged1=0
         aged2=0
@@ -245,15 +245,13 @@ def zonewise(zone,tableordata):
         for i in rec:
                 comdeath10=i[0]
        
-        #print(comdeath10)
-        header='ZONE WISE DETAILS'
+       
        
         txt1="General Information of zone "+str(zone)+"\n"
         data1=[['Population',str(population)],['Number of cases',str(noofcases)],["Percentage of population infected",str(round(populationinfected,2))+"%"]]
         headers=['Particulars','Count']
         table1=columnar(data1,headers)
-        #print(txt1)
-        #print(table1)
+        
        
         txt2="Age wise analysis of cases of zone "+str(zone)+"\n"
         data2=[['Less than 15 years',str(age1)],['15 to 60 years',str(age2)],['Above 60 years',str(age3)]]
@@ -266,7 +264,7 @@ def zonewise(zone,tableordata):
         
         table4=columnar(data4,headers)
         msg=txt1+table1+txt2+table2+txt3+table3+txt4+table4
-        print(population)
+       
         if tableordata==1:
                 print(msg)
         if tableordata==0:
@@ -279,7 +277,7 @@ def intensitymap():
     for i in range(1,401):
         cursor.execute("Select count(*) from coviddataset where zone=%s"%(i))
         rec=cursor.fetchall()
-        #print(rec)
+       
         for j in rec:
             cases.append(j[0])
         cursor.execute("Select population from population where zone='%s'"%(i))
@@ -308,7 +306,7 @@ def intensitymap():
        
         if descsort[key]<25:
             greenzone.append(key)
-    #print(len(redzone))
+    
     redco=[]
     greenco=[]
     yellowco=[]
