@@ -261,6 +261,278 @@ def zonewise(zone,tableordata):
         if tableordata==1:
                 print(msg)
                 return
+def intensitymap():
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    cursor=mycon.cursor()
+    cases=[]
+    population=[]
+    for i in range(1,401):
+        cursor.execute("Select count(*) from coviddataset where zone=%s"%(i))
+        rec=cursor.fetchall()
+        #print(rec)
+        for j in rec:
+            cases.append(j[0])
+        cursor.execute("Select population from population where zone='%s'"%(i))
+        rec=cursor.fetchall()
+        for k in rec:
+            population.append(k[0])
+   
+    percdict={}
+    for i in range(400):
+        perc=(cases[i]/population[i])*100
+        percdict[i+1]=perc
+    descsort=dict(sorted(percdict.items(),key=lambda item:item[1],reverse=True))
+    redzone=[]
+    orangezone=[]
+    
+    yellowzone=[]
+    lbzone=[]
+    greenzone=[]
+    for key in descsort:
+        if descsort[key]>=75:
+            redzone.append(key)
+        if 50<=descsort[key]<75:
+            orangezone.append(key)
+        if 25<=descsort[key]<50:
+            yellowzone.append(key)
+       
+        if descsort[key]<25:
+            greenzone.append(key)
+    #print(len(redzone))
+    redco=[]
+    greenco=[]
+    yellowco=[]
+    orangeco=[]
+   
+    for i in redzone:
+        cursor.execute("Select xlocation,ylocation from population where zone=%s"%(i))
+        rec=cursor.fetchall()
+        redco.append(rec[0])
+
+    for i in orangezone:
+        cursor.execute("Select xlocation,ylocation from population where zone=%s"%(i))
+        rec=cursor.fetchall()
+        orangeco.append(rec[0])
+    for i in yellowzone:
+        cursor.execute("Select xlocation,ylocation from population where zone=%s"%(i))
+        rec=cursor.fetchall()
+        yellowco.append(rec[0])
+    for i in greenzone:
+        cursor.execute("Select xlocation,ylocation from population where zone=%s"%(i))
+        rec=cursor.fetchall()
+        greenco.append(rec[0])
+
+    # import package and making objects 
+    import turtle 
+    
+    T=turtle.Turtle()
+    T1=turtle.Turtle()
+    T1.speed(0)
+    T.speed(0)
+    
+    #initialized position 
+    T.penup()
+    T.setpos(-400,-400)
+    T.pendown()
+    T.hideturtle()
+    T1.hideturtle()
+    
+    #grid
+    for i in range(4):
+        T.forward(800)
+        T.left(90)
+        
+    for i in range(10):
+        T.forward(800)
+        T.left(90)
+        T.forward(40)
+        T.left(90)
+        T.forward(800)
+        T.right(90)
+        T.forward(40)
+        T.right(90)
+    
+    for i in range(10):
+        T.forward(40)
+        T.right(90)
+        T.forward(800)
+        T.left(90)
+        T.forward(40)
+        T.left(90)
+        T.forward(800)
+        T.right(90)
+        
+    T.left(90)
+    
+    def colour_grading():
+        T.penup()
+        T.setpos(-800,300)
+        T.pendown()
+        T.left(90)
+        
+        for i in range(30):
+            T.pencolor("red")
+            T.forward(20)
+            T.right(90)
+            T.forward(1)
+            T.right(90)
+            T.forward(20)
+            T.left(180)
+    
+        T.write(" Greater than 75 % ",move=True,font=("Verdana", 20, "normal"))
+        T.penup()
+        T.setpos(-800,200)
+        T.pendown()
+        
+        
+        for i in range(30):
+            T.pencolor("orange")
+            T.forward(20)
+            T.right(90)
+            T.forward(1)
+            T.right(90)
+            T.forward(20)
+            T.left(180)
+            
+        T.write(" Between 75 % and 50 %  ",move=True,font=("Verdana", 20, "normal"))
+        T.penup()
+        T.setpos(-800,100)
+        T.pendown()
+    
+        for i in range(30):
+            T.pencolor("gold")
+            T.forward(20)
+            T.right(90)
+            T.forward(1)
+            T.right(90)
+            T.forward(20)
+            T.left(180)
+            
+            
+        T.write(" Between 50 % and 25 % ",move=True,font=("Verdana", 20, "normal"))
+        T.penup()
+        T.setpos(-800,0)
+        T.pendown()
+    
+        for i in range(30):
+            T.pencolor("lightgreen")
+            T.forward(20)
+            T.right(90)
+            T.forward(1)
+            T.right(90)
+            T.forward(20)
+            T.left(180)
+    
+        T.write(" Less than 25 % ",move=True,font=("Verdana", 20, "normal"))
+        T.penup()
+        T.setpos(-800,200)
+        T.pendown()
+        T.left(90)
+    
+        T.pencolor("black")    
+        
+    def red_zone(A):
+        x=A[0]
+        y=A[1]
+        x=40*x
+        y=40*y
+        T.penup()
+        T.setpos(-400+x,400-y)
+        T.pendown()
+        T.fillcolor("red")
+        T.begin_fill()
+        for i in range(4):
+            T.forward(40)
+            T.left(90)
+        T.end_fill()
+    
+    def orange_zone(A):
+        x=A[0]
+        y=A[1]
+        x=40*x
+        y=40*y
+        T.penup()
+        T.setpos(-400+x,400-y)
+        T.pendown()
+        T.fillcolor("orange")
+        T.begin_fill()
+        for i in range(4):
+            T.forward(40)
+            T.left(90)
+        T.end_fill()
+    
+    def yellow_zone(A):
+        x=A[0]
+        y=A[1]
+        x=40*x
+        y=40*y
+        T.penup()
+        T.setpos(-400+x,400-y)
+        T.pendown()
+        T.fillcolor("yellow")
+        T.begin_fill()
+        for i in range(4):
+            T.forward(40)
+            T.left(90)
+        T.end_fill()
+    
+    def green_zone(A):
+        x=A[0]
+        y=A[1]
+        x=40*x
+        y=40*y
+        T.penup()
+        T.setpos(-400+x,400-y)
+        T.pendown()
+        T.fillcolor("lightgreen")
+        T.begin_fill()
+        for i in range(4):
+            T.forward(40)
+            T.left(90)
+        T.end_fill()
+    
+
+    for i in redco:
+        red_zone(i)
+    for i in orangeco:
+        orange_zone(i)
+    for i in yellowco:
+        yellow_zone(i)
+    for i in greenco:
+        green_zone(i)
+    
+    
+    colour_grading()
+    T.fillcolor('black')
+    # writing x axis
+    T.penup()
+    T.setpos(-390,410)
+    T.pendown()
+    T.write("X",move=True,font=("Verdana", 20, "bold"))
+    T.right(270)
+    T.forward(200)
+    T.showturtle()
+    
+    #writing Heading and  y axis
+    T1.penup()
+    T1.setpos(-100,450)
+    T1.pendown()
+    T1.pencolor("blue")
+    T1.write("Intensity Map ",move=True,font=("Verdana", 25, "bold"))
+    T1.pencolor("black")
+    
+    T1.penup()
+    T1.setpos(-425,360)
+    T1.pendown()
+    T1.write("Y",move=True,font=("Verdana", 20, "bold"))
+    T1.penup()
+    T1.setpos(-416,360)
+    T1.pendown()
+    T1.right(90)
+    T1.forward(200)
+    T1.showturtle()
+    
+    
         
 sqlpass = input("Enter SQL Password ")   
 
