@@ -93,7 +93,11 @@ def sortByDisease():
     		ri+=1
     	elif i[2]=='True':
     		bp+=1
-    print(diabetes,ri,bp)
+    f=open('diseases.txt','w')
+    f.writerow("The number of people with Diabetes is ",diabetes)
+    f.writerow("The number of people with Abnormal Blood Pressure is ",bp)
+    f.writerow("The number of people with Respiratory illness is ",ri)
+    f.close()
 
 def zonewise(zone,tableordata):
         mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
@@ -263,4 +267,4 @@ sqlpass = input("Enter SQL Password ")
 
 numberlocations()
 pushintosql(sqlpass)
-
+sortByDisease()
