@@ -119,9 +119,9 @@ def sortByDisease():
     ax.bar(labels,rlist,width,label="Respiratory")
     ax.bar(labels,bplist,width,bottom=rlist, label="Blood Pressure")
 
-    ax.set_xlabel('Comorbidities')
+    ax.set_xlabel('Co-morbidities')
     ax.set_ylabel('Number')
-    ax.set_title('Comorbidities per Zone')
+    ax.set_title('Co-morbidities per Zone')
 
     ax.legend()
     plt.show()
