@@ -2,6 +2,7 @@ import csv
 import mysql.connector
 import os,sys
 from columnar import columnar
+from tabulate import tabulate
 def numberlocations():#Numbering the locations
     if os.path.isfile('Populationnumbered.csv'):
         return
@@ -83,21 +84,23 @@ def pushintosql(sqlpass):
 def sortByDisease():
     mycursor=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass, database="covid")
     cursor=mycursor.cursor()
-    cursor.execute("select Diabetes, Respiratoryillness, AbnormalBloodPressure from coviddataset")
+    cursor.execute("select xlocation, ylocation, Diabetes, Respiratoryillness, AbnormalBloodPressure from coviddataset")
     record= cursor.fetchall()
-    diabetes, ri, bp = 0,0,0
-    for i in record:
-    	if i[0]=='True':
-    		diabetes+=1
-    	elif i[1]=='True':
-    		ri+=1
-    	elif i[2]=='True':
-    		bp+=1
-    f=open('diseases.txt','w')
-    f.write("The number of people with Diabetes is "+ str(diabetes)+'\n')
-    f.write("The number of people with Abnormal Blood Pressure is "+str(bp)+'\n')
-    f.write("The number of people with Respiratory illness is "+ str(ri))
-    f.close()
+    l=[["X","Y","Diabetes","Respiratory","BP"]]
+    for i in range(1,21):
+        for j in range(1,21):
+            a,b,c=0,0,0
+            for item in record:
+                if item[0]==i and item[1]==j and item[2]=='True': #diabetes
+                    a+=1
+                elif item[0]==i and item[1]==j and item[3]=='True': #Respiratoryillness
+                    b+=1
+                elif item[0]==i and item[1]==j and item[4]=='True': #BP
+                    c+=1
+            l.append([i,j,a,b,c])
+    table=tabulate(l)
+    with open("Zone Comorbidities.txt",'w') as f:
+        f.writelines(table)
 
 def zonewise(zone,tableordata):
         mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
