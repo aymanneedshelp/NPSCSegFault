@@ -917,6 +917,33 @@ def venncases(zone):
     plt.title(t)
     plt.show()
     
+ def showgraphbasedoncasesreportedperday(zone):#Plot a graph based on daily cases in a zone
+        
+        mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+        cursor=mycon.cursor()
+        cursor.execute("Select count(*) from coviddataset where zone=%s"%(zone))
+        rec=cursor.fetchall()
+        for i in rec:
+             if i[0]==0:
+                     print('No cases')
+                     return
+        
+        x=[]
+        y=[]
+        for i in range(239):
+                x.append(i)
+                cursor.execute("select count(*) from coviddataset where zone=%s and Timeofinfection=%s"%(zone,i))
+                rec=cursor.fetchall()
+                for j in rec:
+                        y.append(j[0])
+        plt.plot(x,y,color='blue')
+        
+        plt.xlabel('Day')
+        plt.ylabel('Number of cases per day')
+        t='Daywise cases of zone'+str(zone)
+        plt.title(t)
+        plt.show()
+    
     
     
  def graphcumm(zone):#Graph which shows cumulative cases of a zone
