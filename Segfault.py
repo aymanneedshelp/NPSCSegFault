@@ -269,6 +269,23 @@ def zonewise(zone,tableordata):
                 print(msg)
         if tableordata==0:
                 return population,noofcases,populationinfectedp,age1,age2,age3,dbcount,respicount,bpcount,com5,death,deathperc,comdeath4,comdeath9,comdeath10,aged1,aged2,aged3
+            
+            
+  def generatereportfor400zones():
+        if os.path.isfile('zonewisereport.csv'):
+                return
+       
+        f1=open("zonewisereport.csv",'w',newline='')
+        csvw=csv.writer(f1)
+        csvw.writerow(['Zone','Population','Number of cases','Percentage of  Population infected','Cases less than 15 years','Cases between 15 to 60 yrs','Cases above 60 years','Cases with diabetes','Cases with respiratory disorders','Cases with abnormal BP','Cases with multiple comorbidities','Number of deaths','Death Rate','Death witn single comorbidity','Death with multiple comorbidities','Death less than 15 years','Deaths between 15 to 60 years','Deaths above 60 years'])
+        
+        for z in range(1,401):
+                
+               
+                a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q=zonewise(z,0)
+                csvw.writerow([z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q])
+                f1.flush()
+        f1.close()
 def intensitymap():
     mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
     cursor=mycon.cursor()
