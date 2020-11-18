@@ -1,0 +1,5 @@
+Age 	Coronavirus Cases 	Deaths 	Death Rate	Recovered	Recovery Rate
+
+Total Coronavirus Cases : 462882
+Deaths : 10952	Death Rate : 2.37
+Recovered : 451930	Recovery Rate : 97.63
