@@ -584,7 +584,7 @@ def intensitymap():
     T1.setpos(-100,450)
     T1.pendown()
     T1.pencolor("blue")
-    T1.write("Intensity Map ",move=True,font=("Verdana", 25, "bold"))
+    T1.write("Covid Intensity Map ",move=True,font=("Verdana", 25, "bold"))
     T1.pencolor("black")
     
     T1.penup()
