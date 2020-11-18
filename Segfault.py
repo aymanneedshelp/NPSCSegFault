@@ -804,7 +804,58 @@ def venndeathscity():
     plt.title(t)
     plt.show()
 
+def venndeaths(zone):
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    cursor=mycon.cursor()
+    cursor.execute("Select count(*) from coviddataset where outcome='Dead' and zone=%s"%(zone))
+    rec=cursor.fetchall()
+    for i in rec:
+        if i[0]==0:
+            print("No deaths in this zone")
+            return
+    a=b=c=d=e=f=g=h=0
+    cursor.execute("Select count(*) from coviddataset where diabetes='TRUE' and AbnormalBloodPressure='FALSE' and Respiratoryillness='FALSE' and outcome='Dead' and zone=%s"%(zone))
+    rec=cursor.fetchall()
+    for i in rec:
+        a=i[0]
+    cursor.execute("Select count(*) from coviddataset where diabetes='FALSE' and AbnormalBloodPressure='TRUE' and Respiratoryillness='FALSE' and outcome='Dead' and zone=%s"%(zone))
+    rec=cursor.fetchall()
+    for i in rec:
+        c=i[0]
+    cursor.execute("Select count(*) from coviddataset where diabetes='FALSE' and AbnormalBloodPressure='FALSE' and Respiratoryillness='TRUE' and outcome='Dead' and zone=%s"%(zone))
+    rec=cursor.fetchall()
+    for i in rec:
+        g=i[0]
+    cursor.execute("Select count(*) from coviddataset where diabetes='TRUE' and AbnormalBloodPressure='TRUE' and Respiratoryillness='FALSE' and outcome='Dead' and zone=%s"%(zone))
+    rec=cursor.fetchall()
+    for i in rec:
+        b=i[0]
+    cursor.execute("Select count(*) from coviddataset where diabetes='TRUE' and AbnormalBloodPressure='FALSE' and Respiratoryillness='TRUE' and outcome='Dead' and zone=%s"%(zone))
+    rec=cursor.fetchall()
+    for i in rec:
+        d=i[0]
+    cursor.execute("Select count(*) from coviddataset where diabetes='FALSE'and AbnormalBloodPressure='TRUE' and Respiratoryillness='TRUE' and outcome='Dead'and zone=%s"%(zone))
+    rec=cursor.fetchall()
+    for i in rec:
+        f=i[0]
+    cursor.execute("Select count(*) from coviddataset where diabetes='TRUE'and AbnormalBloodPressure='TRUE' and Respiratoryillness='TRUE' and outcome='Dead' and zone=%s"%(zone))
+    rec=cursor.fetchall()
+    for i in rec:
+        e=i[0]
+    cursor.execute("Select count(*) from coviddataset where diabetes='FALSE'and AbnormalBloodPressure='FALSE' and Respiratoryillness='FALSE' and outcome='Dead' and zone=%s"%(zone))
+    rec=cursor.fetchall()
+    for i in rec:
+        h=i[0]
+   
+        
     
+    
+    
+    v3=venn3(subsets={'100':a,'010':c,'110':b,'001':g,'101':d,'011':f,'111':e},set_labels=('Diabetes','AbnormalBloodPressure','Respiratory illness',))
+    
+    t="Analysis of Deaths of zone "+str(zone)+"\n"+"Deaths without comorbidities: "+str(h)
+    plt.title(t)
+    plt.show()    
         
 sqlpass = input("Enter SQL Password ")   
 
