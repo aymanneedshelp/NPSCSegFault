@@ -1000,6 +1000,8 @@ def zonewisedaywise():#Creating a table called zonewise daywise in mysql and ins
         
     plt.plot(time,cummlist)
     t="Cumulative Graph of cases for zone"+str(zone)
+    plt.xlabel('Day')
+    plt.ylabel('Number of cases')
     plt.title(t)
     plt.show()
 def cummgraphofentirecity():#Cumulative graph of entire city
