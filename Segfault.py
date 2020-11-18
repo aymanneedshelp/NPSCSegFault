@@ -1002,7 +1002,36 @@ def zonewisedaywise():#Creating a table called zonewise daywise in mysql and ins
     t="Cumulative Graph of cases for zone"+str(zone)
     plt.title(t)
     plt.show()
+def cummgraphofentirecity():#Cumulative graph of entire city
+    import matplotlib.pyplot as plt
+    import mysql.connector
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    cursor=mycon.cursor()
+    cummlist=[]
+    gflist=[]
+    time=[]
+    for j in range(0,239):
+        cursor.execute("select sum(cases) from zonewisedaywise where day<=%s "%(j))
+        rec=cursor.fetchall()
+        time.append(j)
         
+        for k in rec:
+            cummlist.append(int(k[0]))
+    #for i in range(2,len(cummlist)):
+       #try:
+           #gf=int(cummlist[i]-cummlist[i-1])/int(cummlist[i-1]-cummlist[i-2])
+           #gflist.append(gf)
+       #except:
+            #pass
+   # print(cummlist)
+    #print(gflist)
+    #avggf=sum(gflist)/len(gflist)
+   # print(avggf)
+    plt.plot(time,cummlist)
+    plt.xlabel("Day")
+    plt.ylabel("Number of cases")
+    plt.title("Cumulative cases of city")
+    plt.show()        
    
         
 sqlpass = input("Enter SQL Password ")
