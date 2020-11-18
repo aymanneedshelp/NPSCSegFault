@@ -1032,10 +1032,294 @@ def cummgraphofentirecity():#Cumulative graph of entire city
     plt.ylabel("Number of cases")
     plt.title("Cumulative cases of city")
     plt.show()        
+
+def Deathratemap():
+    # import package and making objects 
+    import turtle
+    import csv
+
+    T=turtle.Turtle()
+    T1=turtle.Turtle()
+    T1.speed(0)
+    T.speed(0)
+
+    #initialized position
+    T.penup()
+    T.setpos(-400,-400)
+    T.pendown()
+    T.hideturtle()
+    T1.hideturtle()
+
+    #grid
+    for i in range(4):
+        T.forward(800)
+        T.left(90)
+    
+    for i in range(10):
+        T.forward(800)
+        T.left(90)
+        T.forward(40)
+        T.left(90)
+        T.forward(800)
+        T.right(90)
+        T.forward(40)
+        T.right(90)
+
+    for i in range(10):
+        T.forward(40)
+        T.right(90)
+        T.forward(800)
+        T.left(90)
+        T.forward(40)
+        T.left(90)
+        T.forward(800)
+        T.right(90)
+    
+    T.left(90)
    
+    def colour_grading():
+        T.penup()
+        T.setpos(-800,300)
+        T.pendown()
+        T.left(90)
+    
+        for i in range(30):
+            T.pencolor("red")
+            T.forward(20)
+            T.right(90)
+            T.forward(1)
+            T.right(90)
+            T.forward(20)
+            T.left(180)
+
+        T.write("Greater than 3% ",move=True,font=("Verdana", 20, "normal"))
+        T.penup()
+        T.setpos(-800,200)
+        T.pendown()
+    
+    
+        for i in range(30):
+            T.pencolor("orange")
+            T.forward(20)
+            T.right(90)
+            T.forward(1)
+            T.right(90)
+            T.forward(20)
+            T.left(180)
+        
+        T.write(" Between 3% and 2%  ",move=True,font=("Verdana", 20, "normal"))
+        T.penup()
+        T.setpos(-800,100)
+        T.pendown()
+   
+        for i in range(30):
+            T.pencolor("gold")
+            T.forward(20)
+            T.right(90)
+            T.forward(1)
+            T.right(90)
+            T.forward(20)
+            T.left(180)
+        
+        
+        T.write(" Between 2% and 0% ",move=True,font=("Verdana", 20, "normal"))
+        T.penup()
+        T.setpos(-800,0)
+        T.pendown()
+   
+        for i in range(30):
+            T.pencolor("lightgreen")
+            T.forward(20)
+            T.right(90)
+            T.forward(1)
+            T.right(90)
+            T.forward(20)
+            T.left(180)
+
+        T.write(" 0% ",move=True,font=("Verdana", 20, "normal"))
+        T.penup()
+        T.setpos(-800,200)
+        T.pendown()
+        T.left(90)
+   
+        T.pencolor("black")    
+     
+    def red_zone(A):
+        x=A[0]
+        y=A[1]
+        x=40*x
+        y=40*y
+        T.penup()
+        T.setpos(-400+x,400-y)
+        T.pendown()
+        T.fillcolor("red")
+        T.begin_fill()
+        for i in range(4):
+            T.forward(40)
+            T.left(90)
+        T.end_fill()
+
+    def orange_zone(A):
+        x=A[0]
+        y=A[1]
+        x=40*x
+        y=40*y
+        T.penup()
+        T.setpos(-400+x,400-y)
+        T.pendown()
+        T.fillcolor("orange")
+        T.begin_fill()
+        for i in range(4):
+            T.forward(40)
+            T.left(90)
+        T.end_fill()
+
+    def yellow_zone(A):
+        x=A[0]
+        y=A[1]
+        x=40*x
+        y=40*y
+        T.penup()
+        T.setpos(-400+x,400-y)
+        T.pendown()
+        T.fillcolor("yellow")
+        T.begin_fill()
+        for i in range(4):
+            T.forward(40)
+            T.left(90)
+        T.end_fill()
+
+    def green_zone(A):
+        x=A[0]
+        y=A[1]
+        x=40*x
+        y=40*y
+        T.penup()
+        T.setpos(-400+x,400-y)
+        T.pendown()
+        T.fillcolor("lightgreen")
+        T.begin_fill()
+        for i in range(4):
+            T.forward(40)
+            T.left(90)
+        T.end_fill()
+
+        
+    #Processing Data
+    RL=[]
+    OL=[]
+    YL=[]
+    GL=[]
+
+    f1=open('zonewisereport.csv','r')
+    f2=open('Populationnumbered.csv','r')
+    data1=csv.reader(f1)
+    data2=csv.reader(f2)
+    next(data1)
+    next(data2)
+    for i in data1:
+        if float(i[12]) >= 3.0:
+            for j in data2:
+                if j[3]==i[0]:
+                    RL.append((int(j[0]),int(j[1])))
+                    break
+    f1.close()
+    f2.close()
+
+
+    f1=open('zonewisereport.csv','r')
+    f2=open('Populationnumbered.csv','r')
+    data1=csv.reader(f1)
+    data2=csv.reader(f2)
+    next(data1)
+    next(data2)            
+    for i in data1:
+        if 3.0> float(i[12]) >= 2.0 :
+            for j in data2:
+                if j[3]==i[0]:
+                    OL.append((int(j[0]),int(j[1])))
+                    break
+    f1.close()
+    f2.close()
+
+
+    f1=open('zonewisereport.csv','r')
+    f2=open('Populationnumbered.csv','r')
+    data1=csv.reader(f1)
+    data2=csv.reader(f2)
+    next(data1)
+    next(data2)
+    for i in data1:
+        if 2.0> float(i[12]) > 0.0 :
+            for j in data2:
+                if j[3]==i[0]:
+                    YL.append((int(j[0]),int(j[1])))
+                    break
+    f1.close()
+    f2.close()
+
+    f1=open('zonewisereport.csv','r')
+    f2=open('Populationnumbered.csv','r')
+    data1=csv.reader(f1)
+    data2=csv.reader(f2)
+    next(data1)
+    next(data2)
+    for i in data1:
+        if float(i[12]) == 0.0   :
+            for j in data2:
+                if j[3]==i[0]:
+                    GL.append((int(j[0]),int(j[1])))
+                    break
+    f1.close()
+    f2.close()
+    
+
+    for i in RL:
+        red_zone(i)
+    for i in OL:
+        orange_zone(i)
+    for i in YL:
+        yellow_zone(i)
+    for i in GL:
+        green_zone(i)
+
+
+    colour_grading()
+    T.fillcolor('black')
+    # writing x axis
+    T.penup()
+    T.setpos(-390,410)
+    T.pendown()
+    T.write("X",move=True,font=("Verdana", 20, "bold"))
+    T.right(270)
+    T.forward(200)
+    T.showturtle()
+ 
+    #writing Heading and  y axis
+    T1.penup()
+    T1.setpos(-100,450)
+    T1.pendown()
+    T1.pencolor("blue")
+    T1.write("Death Rate Map ",move=True,font=("Verdana", 25, "bold"))
+    T1.pencolor("black")
+
+    T1.penup()
+    T1.setpos(-425,360)
+    T1.pendown()
+    T1.write("Y",move=True,font=("Verdana", 20, "bold"))
+    T1.penup()
+    T1.setpos(-416,360)
+    T1.pendown()
+    T1.right(90)
+    T1.forward(200)
+    T1.showturtle()
+
+
+    
         
 sqlpass = input("Enter SQL Password ")
 numberlocations()
 pushintosql(sqlpass)
 sortByDisease()
 Basic_city_age()
+Deathratemap()
