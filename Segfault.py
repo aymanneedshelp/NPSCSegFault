@@ -3,6 +3,8 @@ import mysql.connector
 import os,sys
 from columnar import columnar
 from tabulate import tabulate
+import matplotlib.pyplot as plt
+
 def numberlocations():#Numbering the locations
     if os.path.isfile('Populationnumbered.csv'):
         return
@@ -86,7 +88,11 @@ def sortByDisease():
     cursor=mycursor.cursor()
     cursor.execute("select xlocation, ylocation, Diabetes, Respiratoryillness, AbnormalBloodPressure from coviddataset")
     record= cursor.fetchall()
+    
     l=[["X","Y","Diabetes","Respiratory","BP"]]
+    bplist,rlist,dblist=[],[],[]
+    labels=[]
+    
     for i in range(1,21):
         for j in range(1,21):
             a,b,c=0,0,0
@@ -98,9 +104,26 @@ def sortByDisease():
                 elif item[0]==i and item[1]==j and item[4]=='True': #BP
                     c+=1
             l.append([i,j,a,b,c])
+            dblist.append(a)
+            rlist.append(b)
+            bplist.append(c)
+            labels.append(str(i)+','+str(j))
     table=tabulate(l)
     with open("Zone Comorbidities.txt",'w') as f:
         f.writelines(table)
+    
+    
+    width=0.5
+    fig,ax=plt.subplots()
+    ax.bar(labels,dblist,width, label="Diabetes")
+    ax.bar(labels,rlist,width,label="Respiratory")
+    ax.bar(labels,bplist,width,bottom=rlist, label="Blood Pressure")
+
+    ax.set_xlabel('Comorbidities')
+    ax.set_ylabel('Number')
+    ax.set_title('Comorbidities per Zone')
+    ax.legend()
+    plt.show()
 
 def zonewise(zone,tableordata):
         mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
