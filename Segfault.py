@@ -911,7 +911,9 @@ def venndeaths(zone):
     plt.show()
         
 sqlpass = input("Enter SQL Password ")   
-
+install('matplotlib')
+install('mysql.connector')
+install('matplotlib_venn')
 install('columnar')
 install('tabulate')
 numberlocations()
