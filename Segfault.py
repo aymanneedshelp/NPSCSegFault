@@ -1,9 +1,16 @@
+import pip
 import csv
 import mysql.connector
 import os,sys
 from columnar import columnar
 from tabulate import tabulate
 import matplotlib.pyplot as plt
+
+def install(name):
+    if hasattr(pip, 'main'):
+        pip.main(['install', name])
+    else:
+        pip._internal.main(['install', name])
 
 def numberlocations():#Numbering the locations
     if os.path.isfile('Populationnumbered.csv'):
@@ -801,7 +808,8 @@ def venndeathscity():
         
 sqlpass = input("Enter SQL Password ")   
 
-
+install('columnar')
+install('tabulate')
 numberlocations()
 pushintosql(sqlpass)
 sortByDisease()
