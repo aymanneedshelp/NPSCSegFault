@@ -916,6 +916,38 @@ def venncases(zone):
     t="Analysis of Comorbidities of zone "+str(zone)+"\n"+"Cases without comorbidities: "+str(h)
     plt.title(t)
     plt.show()
+    
+    
+    
+ def graphcumm(zone):#Graph which shows cumulative cases of a zone
+    import mysql.connector
+    import numpy as np
+    import matplotlib.pyplot as plt
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    cursor=mycon.cursor()
+    cursor.execute("Select count(*) from coviddataset where zone=%s"%(zone))
+    rec=cursor.fetchall()
+    for i in rec:
+        if i[0]==0:
+            print('No Cases')
+            return
+    
+    cummlist=[]
+    
+    time=[]
+    for j in range(0,239):
+        cursor.execute("select sum(cases) from zonewisedaywise where day<=%s and zone=%s"%(j,zone))
+        rec=cursor.fetchall()
+        time.append(int(j))
+        for k in rec:
+            cummlist.append(int(k[0]))
+        
+    plt.plot(time,cummlist)
+    t="Cumulative Graph of cases for zone"+str(zone)
+    plt.title(t)
+    plt.show()
+        
+   
         
 sqlpass = input("Enter SQL Password ")
 numberlocations()
