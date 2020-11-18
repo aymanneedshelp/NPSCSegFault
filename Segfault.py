@@ -1,10 +1,6 @@
 import pip
 import csv
-import mysql.connector
 import os,sys
-from columnar import columnar
-from tabulate import tabulate
-import matplotlib.pyplot as plt
 
 def install(name):
     if hasattr(pip, 'main'):
@@ -12,11 +8,22 @@ def install(name):
     else:
         pip._internal.main(['install', name])
 
+install('matplotlib')
+install('mysql.connector')
+install('matplotlib_venn')
+install('columnar')
+install('tabulate')
+
+import mysql.connector
+from columnar import columnar
+from tabulate import tabulate
+import matplotlib.pyplot as plt
+
 def numberlocations():#Numbering the locations
     if os.path.isfile('Populationnumbered.csv'):
         return
-    f=open('Population.csv','r')
-    f1=open('Populationnumbered.csv','w',newline='')
+    f=open('Dataset/Population.csv','r')
+    f1=open('Dataset/Populationnumbered.csv','w',newline='')
     csvr=csv.reader(f)
     csvw=csv.writer(f1)
     csvw.writerow(['x location','y location','population','zonenumber'])
@@ -31,7 +38,7 @@ def numberlocations():#Numbering the locations
         i+=1
     f.close()
     f1.close()
-    f1=open('Populationnumbered.csv','r')
+    f1=open('Dataset/Populationnumbered.csv','r')
     csvr1=csv.reader(f1)
     zonedict={}
     for row in csvr1:
@@ -40,8 +47,8 @@ def numberlocations():#Numbering the locations
         t=(int(row[0]),int(row[1]))
         val=int(row[3])
         zonedict[t]=val
-    f2=open("COVID_Dataset.csv",'r')
-    f3=open("COVID_Dataset Zone.csv",'w',newline='')
+    f2=open("Dataset/COVID_Dataset.csv",'r')
+    f3=open("Dataset/COVID_Dataset Zone.csv",'w',newline='')
     csvr2=csv.reader(f2)
     csvw3=csv.writer(f3)
     csvw3.writerow(['Time of Infection','Time of reporting','x location','y location','Age','Diabetes','Respiratory Illnesses','Abnormal Blood Pressure','Outcome','zone'])
@@ -70,7 +77,7 @@ def pushintosql(sqlpass):
     cursor.execute("Create table if not exists Coviddataset(TimeofInfection int(4),Timeofreporting int(4),xlocation int(3),ylocation int(3),Age int(3),Diabetes varchar(10),Respiratoryillness varchar(10),AbnormalBloodPressure Varchar(10),Outcome varchar(10),Zone int(4))")
     cursor.execute("Create table if not exists population(Xlocation int(3),ylocation int(3),population int(10),zone int(5))")
     mycon.close()
-    f1=open("COVID_Dataset Zone.csv",'r')
+    f1=open("Dataset/COVID_Dataset Zone.csv",'r')
     csvr1=csv.reader(f1)
     mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
     cursor=mycon.cursor()
@@ -80,7 +87,7 @@ def pushintosql(sqlpass):
         cursor.execute("Insert into coviddataset values(%s,%s,%s,%s,%s,'%s','%s','%s','%s',%s)"%(int(row[0]),int(row[1]),int(row[2]),int(row[3]),int(row[4]),row[5],row[6],row[7],row[8],int(row[9])))
         mycon.commit()
     f1.close()
-    f2=open("Populationnumbered.csv",'r')
+    f2=open("Dataset/Populationnumbered.csv",'r')
     csvr2=csv.reader(f2)
     for row in csvr2:
         if csvr2.line_num==1:
@@ -116,7 +123,7 @@ def sortByDisease():
             bplist.append(c)
             labels.append(str(i)+','+str(j))
     table=tabulate(l)
-    with open("Zone Comorbidities.txt",'w') as f:
+    with open("Output_Files/Zone Comorbidities.txt",'w') as f:
         f.writelines(table)
     
     
@@ -305,8 +312,8 @@ def zonewise(zone,tableordata):
                 return population,noofcases,populationinfectedp,age1,age2,age3,dbcount,respicount,bpcount,com5,death,deathperc,comdeath4,comdeath9,comdeath10,aged1,aged2,aged3
             
             
-  def generatereportfor400zones():
-        if os.path.isfile('zonewisereport.csv'):
+def generatereportfor400zones():
+        if os.path.isfile('Output_Files/zonewisereport.csv'):
                 return
        
         f1=open("zonewisereport.csv",'w',newline='')
@@ -595,7 +602,7 @@ def Basic_city_age():
     import csv
     from matplotlib import pyplot as plt
 
-    f=open("COVID_Dataset.csv",'r')
+    f=open("Dataset/COVID_Dataset.csv",'r')
     data=csv.reader(f)
     count=-1 # to skip first line
     death=0
@@ -605,12 +612,12 @@ def Basic_city_age():
             death=death+1   
     f.close()
 
-    f=open("Basic-Age.txt","w")
+    f=open("Output_Files/Basic-Age.txt","w")
     f.writelines(["Age \t","Coronavirus Cases \t","Deaths \t","Death Rate\t","Recovered\t","Recovery Rate\n"])
     f.close()
 
     def age_seperation(a,b):
-        f=open("COVID_Dataset.csv",'r')
+        f=open("Dataset/COVID_Dataset.csv",'r')
         data=csv.reader(f)
         count=0
         death=0
@@ -683,7 +690,7 @@ def Basic_city_age():
     recovered=count-death      
     deathrate=round(((death/count)*100),2)
     recoveryrate=round(((recovered/count)*100),2)
-    f=open("Basic-Age.txt","a")
+    f=open("Output_Files/Basic-Age.txt","a")
     f.writelines(["\nTotal Coronavirus Cases : ",str(count)])
     f.writelines(["\nDeaths : ",str(death)])
     f.writelines(["\tDeath Rate : ",str(deathrate)])
@@ -857,7 +864,7 @@ def venndeaths(zone):
     plt.title(t)
     plt.show()  
     
- def venncases(zone):
+def venncases(zone):
     
     mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
     cursor=mycon.cursor()
@@ -910,12 +917,7 @@ def venndeaths(zone):
     plt.title(t)
     plt.show()
         
-sqlpass = input("Enter SQL Password ")   
-install('matplotlib')
-install('mysql.connector')
-install('matplotlib_venn')
-install('columnar')
-install('tabulate')
+sqlpass = input("Enter SQL Password ")
 numberlocations()
 pushintosql(sqlpass)
 sortByDisease()
