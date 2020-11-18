@@ -355,14 +355,14 @@ def intensitymap():
     lbzone=[]
     greenzone=[]
     for key in descsort:
-        if descsort[key]>=75:
+        if descsort[key]>=60:
             redzone.append(key)
-        if 50<=descsort[key]<75:
+        if 40<=descsort[key]<60:
             orangezone.append(key)
-        if 25<=descsort[key]<50:
+        if 10<=descsort[key]<40:
             yellowzone.append(key)
        
-        if descsort[key]<25:
+        if descsort[key]<10:
             greenzone.append(key)
     
     redco=[]
@@ -445,7 +445,7 @@ def intensitymap():
             T.forward(20)
             T.left(180)
     
-        T.write(" Greater than 75 % ",move=True,font=("Verdana", 20, "normal"))
+        T.write(" Greater than 60 % ",move=True,font=("Verdana", 20, "normal"))
         T.penup()
         T.setpos(-800,200)
         T.pendown()
@@ -460,7 +460,7 @@ def intensitymap():
             T.forward(20)
             T.left(180)
             
-        T.write(" Between 75 % and 50 %  ",move=True,font=("Verdana", 20, "normal"))
+        T.write(" Between 40 % and 60 %  ",move=True,font=("Verdana", 20, "normal"))
         T.penup()
         T.setpos(-800,100)
         T.pendown()
@@ -475,7 +475,7 @@ def intensitymap():
             T.left(180)
             
             
-        T.write(" Between 50 % and 25 % ",move=True,font=("Verdana", 20, "normal"))
+        T.write(" Between 10 % and 40 % ",move=True,font=("Verdana", 20, "normal"))
         T.penup()
         T.setpos(-800,0)
         T.pendown()
@@ -489,7 +489,7 @@ def intensitymap():
             T.forward(20)
             T.left(180)
     
-        T.write(" Less than 25 % ",move=True,font=("Verdana", 20, "normal"))
+        T.write(" Less than 10 % ",move=True,font=("Verdana", 20, "normal"))
         T.penup()
         T.setpos(-800,200)
         T.pendown()
