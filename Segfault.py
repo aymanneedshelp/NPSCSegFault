@@ -1314,7 +1314,29 @@ def Deathratemap():
     T1.forward(200)
     T1.showturtle()
 
-
+def dailycasescity():
+    
+    import matplotlib.pyplot as plt
+    import mysql.connector
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    cursor=mycon.cursor()
+    cummlist=[]
+    gflist=[]
+    time=[]
+    for j in range(0,239):
+        cursor.execute("select sum(cases) from zonewisedaywise where day=%s "%(j))
+        rec=cursor.fetchall()
+        time.append(j)
+        
+        for k in rec:
+            cummlist.append(int(k[0]))
+   
+    plt.plot(time,cummlist)
+    plt.xlabel("Day")
+    plt.ylabel("Number of cases")
+    plt.title("Daily cases  of city")
+    plt.show()
+    
     
         
 sqlpass = input("Enter SQL Password ")
