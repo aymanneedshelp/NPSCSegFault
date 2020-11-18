@@ -122,6 +122,7 @@ def sortByDisease():
     ax.set_xlabel('Comorbidities')
     ax.set_ylabel('Number')
     ax.set_title('Comorbidities per Zone')
+
     ax.legend()
     plt.show()
 
