@@ -1,0 +1,117 @@
+import csv
+from matplotlib import pyplot as plt
+
+f=open("COVID_Dataset.csv",'r')
+data=csv.reader(f)
+count=-1 # to skip first line
+death=0
+for i in data:
+    count=count+1
+    if i[8]=='Dead':
+        death=death+1   
+f.close()
+
+f=open("Basic-Age.txt","w")
+f.writelines(["Age \t","Coronavirus Cases \t","Deaths \t","Death Rate\t","Recovered\t","Recovery Rate\n"])
+f.close()
+
+def age_seperation(a,b):
+    f=open("COVID_Dataset.csv",'r')
+    data=csv.reader(f)
+    count=0
+    death=0
+    next(data)#skip first line
+    for i in data:
+        if a<= int(i[4]) <=b:
+            count=count+1
+            if i[8]=='Dead':
+                death=death+1   
+    f.close()
+    recovered=count-death
+    drate=round(((death/count)*100),2)
+    rrate=round(((recovered/count)*100),2)
+    age=str(a)+'-'+str(b)
+    f=open("Basic-Age.txt","a")
+    f.writelines([age+'\t',str(count)+'\t\t',str(death)+'\t',str(drate)+'\t\t',str(recovered)+'\t\t',str(rrate)+'\n'])
+    f.close()
+
+    return count,death,recovered
+
+covid=[]
+dead=[]
+recover=[]
+
+data=age_seperation(0,9)
+covid.append(data[0])
+dead.append(data[1])
+recover.append(data[2])
+
+data=age_seperation(10,19)
+covid.append(data[0])
+dead.append(data[1])
+recover.append(data[2])
+
+data=age_seperation(20,29)
+covid.append(data[0])
+dead.append(data[1])
+recover.append(data[2])
+
+data=age_seperation(30,39)
+covid.append(data[0])
+dead.append(data[1])
+recover.append(data[2])
+
+data=age_seperation(40,49)
+covid.append(data[0])
+dead.append(data[1])
+recover.append(data[2])
+
+data=age_seperation(50,59)
+covid.append(data[0])
+dead.append(data[1])
+recover.append(data[2])
+
+data=age_seperation(60,69)
+covid.append(data[0])
+dead.append(data[1])
+recover.append(data[2])
+
+data=age_seperation(70,79)
+covid.append(data[0])
+dead.append(data[1])
+recover.append(data[2])
+
+data=age_seperation(80,89)
+covid.append(data[0])
+dead.append(data[1])
+recover.append(data[2])
+
+recovered=count-death      
+deathrate=round(((death/count)*100),2)
+recoveryrate=round(((recovered/count)*100),2)
+f=open("Basic-Age.txt","a")
+f.writelines(["\nTotal Coronavirus Cases : ",str(count)])
+f.writelines(["\nDeaths : ",str(death)])
+f.writelines(["\tDeath Rate : ",str(deathrate)])
+f.writelines(["\nRecovered : ",str(recovered)])
+f.writelines(["\tRecovery Rate : ",str(recoveryrate)])
+f.close()
+    
+#pie plotter
+
+age=['0 to 9','10 to 19','20 to 29','30 to 39','40 to 49','50 to 59','60 to 69','70 to 79','80 to 89',]
+colors = ( "orange", "cyan", "blue","grey", "indigo", "beige","lightgreen","silver","yellow")
+
+fig = plt.figure(figsize =(10, 7))
+expand=(0.1,0.1,0.1,0.1,0.1,0,0.1,0.1,0.1)
+plt.title("Coronavirus Cases - AGE ")
+plt.pie(covid,labels=age,autopct='%1.1f%%',colors=colors,explode=expand,shadow=True)
+plt.show()
+
+fig = plt.figure(figsize =(10, 7))
+expand=(0.1,0.1,0.1,0.1,0.1,0,0.1,0.1,0.1)
+plt.title("Coronavirus Deaths - AGE ")
+plt.pie(dead,labels=age,autopct='%1.1f%%',colors=colors,explode=expand,shadow=True)
+plt.show()
+
+
