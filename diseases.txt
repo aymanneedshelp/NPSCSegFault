@@ -1,3 +1,0 @@
-The number of people with Diabetes is 149981
-The number of people with Abnormal Blood Pressure is 27473
-The number of people with Respiratory illness is 30263
