@@ -943,6 +943,35 @@ def venncases(zone):
         t='Daywise cases of zone'+str(zone)
         plt.title(t)
         plt.show()
+def zonewisedaywise():#Creating a table called zonewise daywise in mysql and inserting the zone,day and the number of cases in a day in a zone
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    cursor=mycon.cursor()
+    cursor.execute('Show tables')
+    rec=cursor.fetchall()
+    for i in rec:
+        if i==(zonewisedaywise,):
+            return
+    cursor.execute("Select max(timeofinfection) from coviddataset")
+    rec=cursor.fetchall()
+    maxd=0
+    for i in rec:
+        maxd=i[0]
+    cursor.execute("Create table if not exists zonewisedaywise(zone int(9),day int(9),cases int(9))")
+    for zo in range(1,401):
+        
+        for da in range(0,maxd+1):
+            cursor.execute("Select count(*) from coviddataset where zone=%s and timeofinfection=%s"%(zo,da))
+            rec=cursor.fetchall()
+            c=0
+            for i in rec:
+                c=i[0]
+            cursor.execute("Insert into zonewisedaywise values (%s,%s,%s)"%(zo,da,c))
+            mycon.commit()
+        
+    
+
+
+
     
     
     
