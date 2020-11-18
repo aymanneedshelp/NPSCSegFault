@@ -277,13 +277,13 @@ def zonewise(zone,tableordata):
        
         f1=open("zonewisereport.csv",'w',newline='')
         csvw=csv.writer(f1)
-        csvw.writerow(['Zone','Population','Number of cases','Percentage of  Population infected','Cases less than 15 years','Cases between 15 to 60 yrs','Cases above 60 years','Cases with diabetes','Cases with respiratory disorders','Cases with abnormal BP','Cases with multiple comorbidities','Number of deaths','Death Rate','Death witn single comorbidity','Death with multiple comorbidities','Death less than 15 years','Deaths between 15 to 60 years','Deaths above 60 years'])
+        csvw.writerow(['Zone','Population','Number of cases','Percentage of  Population infected','Cases less than 15 years','Cases between 15 to 60 yrs','Cases above 60 years','Cases with diabetes','Cases with respiratory disorders','Cases with abnormal BP','Cases with multiple comorbidities','Number of deaths','Death Rate','Death with single comorbidity','Death with multiple comorbidities','Deaths without comorbidities','Death less than 15 years','Deaths between 15 to 60 years','Deaths above 60 years'])
         
         for z in range(1,401):
                 
                
-                a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q=zonewise(z,0)
-                csvw.writerow([z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q])
+                a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r=zonewise(z,0)
+                csvw.writerow([z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r])
                 f1.flush()
         f1.close()
 def intensitymap():
