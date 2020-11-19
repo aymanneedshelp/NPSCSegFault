@@ -140,6 +140,9 @@ def sortByDisease():
     ax.legend()
     plt.show()
 
+    
+
+
 def zonewise(zone,tableordata):
         returnlist=[]
         mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
