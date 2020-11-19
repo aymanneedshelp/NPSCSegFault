@@ -2450,10 +2450,163 @@ def alter_zonewisereport():
     T1.showturtle()
 
 
+def main():
+    
+    while True:
+         print("COVID-19 DATA ANALYSIS")
+         print("Main menu")
+         print("1.Intensity maps")
+         print("2.Zone wise plots")
+         print("3.Overall Plots for the city")
+         print("4.Exit")
+        try:
+            
+             ch=int(input("Enter a choice"))
+        except:
+            print("An Error has occured")
+            break
+        if ch==1:
+            intensitymaps()
+        elif ch==2:
+            zonewiseplots()
+        elif ch==3:
+            overallplots()
+        elif ch==4:
+            break
+        else:
+            print("Invalid choice")
 
+
+def intensitymaps():
+    
+    while True:
+        print("Types of intensity maps")
+        print("1.Covid 19 Intensity map")
+        print("2.Death rate map")
+        print("3.Covid patients with diabetes")
+        print("4.Covid patients with abnormal blood pressure")
+        print("5.Covid patients with respiratory illness")
+        print("6.Exit")
+        try:
+            ch=int(input("Enter Choice"))
+        except:
+            print("An error has occured")
+            break
+        if ch==1:
+            intensitymap()
+        elif ch==2:
+            Deathratemap()
+        elif ch==3:
+             Diabetes_covidmap()
+        elif ch==4:
+            Bp_covidmap()
+        elif ch==5:
+            Respiratory_covidmap()
+        elif ch==6:
+            break
+        else:
+            print("Invalid choice")
+def zonewiseplots():
+   
+    while True:
+        print("Types of zonewise plots")
+        print("1.Cumulative graph of a zone")
+        print("2.Daily graph of a zone")
+        print("3.Analysis of cases with comorbidities of a zone")
+        print("4.Analysis of deaths with comorbidities of a zone")
+        print("5.Exit")
+        try:
+            
+           ch=int(input("Enter a choice"))
+        except:
+            print("An error has occured")
+            break
+        if ch==1:
+            try:
+               zone=int(input("Enter a zone"))
+            except:
+                 print("An error has occured")
+                 break
+                
+            if zone<1 or zone>400:
+                print("Zone does not exist")
+            elif zone>=1 and zone<=400:
+                 graphcumm(zone)
+        elif ch==2:
+            try:
+               zone=int(input("Enter a zone"))
+            except:
+                 print("An error has occured")
+                 break
+             
+            if zone<1 or zone>400:
+                
+                print("Zone does not exist")
+            elif zone>=1 and zone<=400:
+                showgraphbasedoncasesreportedperday(zone)
+        elif ch==3:
+            try:
+              zone=int(input("Enter a zone"))
+             
+            except:
+                 print("An error has occured")
+                 break
+            if zone<1 or zone>400:
+                print("Zone does not exist")
+            elif zone>=1 and zone<=400:
+                venncases(zone)
+        elif ch==4:
+            try:
+               zone=int(input("Enter a zone"))
+             except:
+                 print("An error has occured")
+                 break
+            
+            if zone<1 or zone>400:
+                print("Zone does not exist")
+            elif zone>=1 and zone<=400:
+                venndeaths(zone)
+        elif ch==5:
+            break
+        else:
+            print("Invalid choice")
+            
+def overallplots():
+   
+    while True:
+         print("Overall plots for city")
+         print("1.Cumulative graph of the city")
+         print("2.Daily graph of the city")
+         print("3.Analysis of cases with comorbidities of the city")
+         print("4.Analysis of deaths with comorbidities of the city")
+         print("5.Analysis of cases and deaths of city based on age")
+         print("6.Vaccine priority map")
+         print("7.Exit")
+        try:
+            ch=int(input("Enter your choice"))
+        except:
+            print("An error has occured")
+            break
+        if ch==1:
+            cummgraphofentirecity()
+        elif ch==2:
+            dailycasescity()
+        elif ch==3:
+            venncasescity()
+        elif ch==4:
+            venndeathscity()
+        elif ch==5:
+             Basic_city_age()
+        elif ch==6:
+            vaccine_priority_map()
+        elif ch==7:
+            break
+        else:
+            print("Invalid choice")
+        
+            
 #sqlpass = input("Enter SQL Password ")
 numberlocations()
 pushintosql()
-sortByDisease()
-Basic_city_age()
-Deathratemap()
+zonewisedaywise()
+generatereportfor400zones()
