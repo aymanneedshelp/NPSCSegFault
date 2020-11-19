@@ -80,7 +80,7 @@ def pushintosql():
     mycon.close()
     f1=open("Dataset/COVID_Dataset Zone.csv",'r')
     csvr1=csv.reader(f1)
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd='sql123',database="covid")
     cursor=mycon.cursor()
     for row in csvr1:
         if csvr1.line_num==1:
@@ -1583,7 +1583,7 @@ def Diabetes_covidmap():
                     break
     f1.close()
     f2.close()
-    print(len(RL)+len(YL)+len(OL)+len(GL))
+    #print(len(RL)+len(YL)+len(OL)+len(GL))
 
     for i in RL:
         red_zone(i)
@@ -1864,7 +1864,7 @@ def Respiratory_covidmap():
                     break
     f1.close()
     f2.close()
-    print(len(RL)+len(YL)+len(OL)+len(GL))
+    #print(len(RL)+len(YL)+len(OL)+len(GL))
 
     for i in RL:
         red_zone(i)
@@ -2144,7 +2144,7 @@ def Bp_covidmap():
                     break
     f1.close()
     f2.close()
-    print(len(RL)+len(YL)+len(OL)+len(GL))
+    #print(len(RL)+len(YL)+len(OL)+len(GL))
 
     for i in RL:
         red_zone(i)
@@ -2187,6 +2187,8 @@ def Bp_covidmap():
     T1.showturtle()
  
 def alter_zonewisereport():
+    if os.path.isfile('zone_wisereport.csv'):
+        return
     import csv
     f1=open("zonewisereport.csv",'r')
     data=csv.reader(f1)
@@ -2625,4 +2627,5 @@ pushintosql()
 zonewisedaywise()
 generatereportfor400zones()
 sortByDisease()
+alter_zonewisereport()
 main()
