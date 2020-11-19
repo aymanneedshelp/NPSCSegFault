@@ -1,4 +1,4 @@
-import pip,csv,os,sys,operator
+import pip,csv,os,sys,operator,turtle
 
 def install(name): #function used to install missing libraries
     if hasattr(pip, 'main'):
@@ -63,7 +63,7 @@ def numberlocations():#Numbering the locations
     f3.close()
 
 def pushintosql():
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd='sql123')
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass)
     cursor=mycon.cursor()
     cursor.execute("Show databases")
     rec=cursor.fetchall()
@@ -98,7 +98,7 @@ def pushintosql():
     mycon.close()
 
 def sortByDisease():
-    mycursor=mysql.connector.connect(host="localhost",user="root",passwd='sql123', database="covid")
+    mycursor=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass, database="covid")
     cursor=mycursor.cursor()
     cursor.execute("select xlocation, ylocation, Diabetes, Respiratoryillness, AbnormalBloodPressure, Outcome from coviddataset")
     record= cursor.fetchall()
@@ -127,7 +127,7 @@ def sortByDisease():
             bplist.append(c)
             labels.append(str(i)+','+str(j))
             
-            score = a + 2*b + 2*c +d #this score will be used to dertermine necessity of vaccine(higher = greater need)
+            score = 2*a + b + c +d #this score will be used to dertermine necessity of vaccine(higher = greater need)
             dictionary[str(i)+','+str(j)] = score
     
     #tabulate the number of diseases per zone in a txt file
@@ -157,7 +157,7 @@ def sortByDisease():
 
 def zonewise(zone,tableordata):
         returnlist=[]
-        mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+        mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
         cursor=mycon.cursor()
         cursor.execute("Select count(*) from coviddataset where zone=%s"%(zone))
         rec=cursor.fetchall()
@@ -343,7 +343,7 @@ def generatereportfor400zones():
         f1.close()
 
 def intensitymap():
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
     cursor=mycon.cursor()
     cases=[]
     population=[]
@@ -402,9 +402,6 @@ def intensitymap():
         cursor.execute("Select xlocation,ylocation from population where zone=%s"%(i))
         rec=cursor.fetchall()
         greenco.append(rec[0])
-
-    # import package and making objects 
-    import turtle 
     
     T=turtle.Turtle()
     T1=turtle.Turtle()
@@ -731,7 +728,7 @@ def Basic_city_age():
     plt.show()
 
 def venncasescity():
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
     cursor=mycon.cursor()
     a=b=c=d=e=f=g=h=0
     cursor.execute("Select count(*) from coviddataset where diabetes='TRUE' and AbnormalBloodPressure='FALSE' and Respiratoryillness='FALSE'")
@@ -777,7 +774,7 @@ def venncasescity():
     plt.show()
  
 def venndeathscity():
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
     cursor=mycon.cursor()
     a=b=c=d=e=f=g=h=0
     cursor.execute("Select count(*) from coviddataset where diabetes='TRUE' and AbnormalBloodPressure='FALSE' and Respiratoryillness='FALSE' and outcome='Dead'")
@@ -823,7 +820,7 @@ def venndeathscity():
     plt.show()
 
 def venndeaths(zone):
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
     cursor=mycon.cursor()
     cursor.execute("Select count(*) from coviddataset where outcome='Dead' and zone=%s"%(zone))
     rec=cursor.fetchall()
@@ -877,7 +874,7 @@ def venndeaths(zone):
     
 def venncases(zone):
     
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
     cursor=mycon.cursor()
     a=b=c=d=e=f=g=h=0
     cursor.execute("Select count(*) from coviddataset where zone=%s"%(zone))
@@ -929,7 +926,7 @@ def venncases(zone):
     plt.show()
     
 def showgraphbasedoncasesreportedperday(zone): #Plot a graph based on daily cases in a zone
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
     cursor=mycon.cursor()
     cursor.execute("Select count(*) from coviddataset where zone=%s"%(zone))
     rec=cursor.fetchall()
@@ -955,7 +952,7 @@ def showgraphbasedoncasesreportedperday(zone): #Plot a graph based on daily case
     plt.show()
 
 def zonewisedaywise():#Creating a table called zonewise daywise in mysql and inserting the zone,day and the number of cases in a day in a zone
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
     cursor=mycon.cursor()
     cursor.execute('Show tables')
     rec=cursor.fetchall()
@@ -983,7 +980,7 @@ def graphcumm(zone):#Graph which shows cumulative cases of a zone
     import mysql.connector
     import numpy as np
     import matplotlib.pyplot as plt
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
     cursor=mycon.cursor()
     cursor.execute("Select count(*) from coviddataset where zone=%s"%(zone))
     rec=cursor.fetchall()
@@ -1012,7 +1009,7 @@ def graphcumm(zone):#Graph which shows cumulative cases of a zone
 def cummgraphofentirecity():#Cumulative graph of entire city
     import matplotlib.pyplot as plt
     import mysql.connector
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
     cursor=mycon.cursor()
     cummlist=[]
     gflist=[]
@@ -1041,10 +1038,6 @@ def cummgraphofentirecity():#Cumulative graph of entire city
     plt.show()        
 
 def Deathratemap():
-    # import package and making objects 
-    import turtle
-    import csv
-
     T=turtle.Turtle()
     T1=turtle.Turtle()
     T1.speed(0)
@@ -1325,7 +1318,7 @@ def dailycasescity():
     
     import matplotlib.pyplot as plt
     import mysql.connector
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass,database="covid")
     cursor=mycon.cursor()
     cummlist=[]
     gflist=[]
@@ -1345,9 +1338,6 @@ def dailycasescity():
     plt.show()
 
 def Diabetes_covidmap():
-    # import package and making objects 
-    import turtle
-    import csv
 
     T=turtle.Turtle()
     T1=turtle.Turtle()
@@ -1626,9 +1616,7 @@ def Diabetes_covidmap():
     T1.showturtle()
     
 def Respiratory_covidmap():
-    # import package and making objects 
-    import turtle
-    import csv
+    
 
     T=turtle.Turtle()
     T1=turtle.Turtle()
@@ -1907,9 +1895,7 @@ def Respiratory_covidmap():
     T1.showturtle()
 
 def Bp_covidmap():
-    # import package and making objects 
-    import turtle
-    import csv
+    
 
     T=turtle.Turtle()
     T1=turtle.Turtle()
@@ -2211,10 +2197,7 @@ def alter_zonewisereport():
             except ZeroDivisionError:
                 Bp=0
             write.writerow(i+[Dp,Rp,Bp])
- def vaccine_priority_map():
-    # import package and making objects 
-    import turtle
-    import csv
+def vaccine_priority_map():
 
     T=turtle.Turtle()
     T1=turtle.Turtle()
@@ -2451,17 +2434,16 @@ def alter_zonewisereport():
 
 
 def main():
-    
     while True:
-         print("COVID-19 DATA ANALYSIS")
-         print("Main menu")
-         print("1.Intensity maps")
-         print("2.Zone wise plots")
-         print("3.Overall Plots for the city")
-         print("4.Exit")
+
+        print("COVID-19 DATA ANALYSIS")
+        print("Main menu")
+        print("1.Intensity maps")
+        print("2.Zone wise plots")
+        print("3.Overall Plots for the city")
+        print("4.Exit")
         try:
-            
-             ch=int(input("Enter a choice"))
+            ch=int(input("Enter a choice"))
         except:
             print("An Error has occured")
             break
@@ -2559,7 +2541,7 @@ def zonewiseplots():
         elif ch==4:
             try:
                zone=int(input("Enter a zone"))
-             except:
+            except:
                  print("An error has occured")
                  break
             
@@ -2570,7 +2552,7 @@ def zonewiseplots():
         elif ch==5:
             try:
                zone=int(input("Enter a zone"))
-             except:
+            except:
                  print("An error has occured")
                  break
             
@@ -2588,14 +2570,15 @@ def zonewiseplots():
 def overallplots():
    
     while True:
-         print("Overall plots for city")
-         print("1.Cumulative graph of the city")
-         print("2.Daily graph of the city")
-         print("3.Analysis of cases with comorbidities of the city")
-         print("4.Analysis of deaths with comorbidities of the city")
-         print("5.Analysis of cases and deaths of city based on age")
-         print("6.Vaccine priority map")
-         print("7.Exit")
+        print("Overall plots for city")
+        print("1.Cumulative graph of the city")
+        print("2.Daily graph of the city")
+        print("3.Analysis of cases with comorbidities of the city")
+        print("4.Analysis of deaths with comorbidities of the city")
+        print("5.Analysis of cases and deaths of city based on age")
+        print("6.Vaccine priority map")
+        print("7.Exit")
+        
         try:
             ch=int(input("Enter your choice"))
         except:
@@ -2619,7 +2602,7 @@ def overallplots():
             print("Invalid choice")
         
             
-#sqlpass = input("Enter SQL Password ")
+sqlpass = input("Enter SQL Password ")
 numberlocations()
 pushintosql()
 zonewisedaywise()
