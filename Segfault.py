@@ -2374,7 +2374,7 @@ def vaccine_priority_map():
     YL=[]
     GL=[]
 
-    f=open("vaccine_priority.txt",'r')
+    f=open("Output_Files/vaccine_priority.txt",'r')
     data=f.readlines()
     for i in data:
         i=i.split()
