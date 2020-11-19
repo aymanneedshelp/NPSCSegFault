@@ -62,8 +62,8 @@ def numberlocations():#Numbering the locations
     f2.close()
     f3.close()
 
-def pushintosql(sqlpass):
-    mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass)
+def pushintosql():
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd='sql123')
     cursor=mycon.cursor()
     cursor.execute("Show databases")
     rec=cursor.fetchall()
@@ -2212,9 +2212,9 @@ def alter_zonewisereport():
                 Bp=0
             write.writerow(i+[Dp,Rp,Bp])
             
-sqlpass = input("Enter SQL Password ")
+#sqlpass = input("Enter SQL Password ")
 numberlocations()
-pushintosql(sqlpass)
+pushintosql()
 sortByDisease()
 Basic_city_age()
 Deathratemap()
