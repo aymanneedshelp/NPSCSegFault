@@ -127,7 +127,7 @@ def sortByDisease():
             bplist.append(c)
             labels.append(str(i)+','+str(j))
             
-            score = 2*a + b + c +d #this score will be used to dertermine necessity of vaccine(higher = greater need)
+            score = a +2*b + 2*c +d #this score will be used to dertermine necessity of vaccine(higher = greater need)
             dictionary[str(i)+','+str(j)] = score
     
     #tabulate the number of diseases per zone in a txt file
