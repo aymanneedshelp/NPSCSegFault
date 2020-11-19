@@ -1,6 +1,4 @@
-import pip
-import csv
-import os,sys
+import pip,csv,os,sys,operator
 
 def install(name):
     if hasattr(pip, 'main'):
@@ -8,16 +6,18 @@ def install(name):
     else:
         pip._internal.main(['install', name])
 
-install('matplotlib')
-install('mysql.connector')
-install('matplotlib_venn')
-install('columnar')
-install('tabulate')
-
-import mysql.connector
-from columnar import columnar
-from tabulate import tabulate
-import matplotlib.pyplot as plt
+try:
+    import mysql.connector
+    from columnar import columnar
+    from tabulate import tabulate
+    import matplotlib.pyplot as plt
+    from matplotlib_venn import venn3
+except:
+    install('matplotlib')
+    install('mysql.connector')
+    install('matplotlib_venn')
+    install('columnar')
+    install('tabulate')
 
 def numberlocations():#Numbering the locations
     if os.path.isfile('Populationnumbered.csv'):
@@ -61,6 +61,7 @@ def numberlocations():#Numbering the locations
         csvw3.writerow(k)
     f2.close()
     f3.close()
+
 def pushintosql(sqlpass):
     mycon=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass)
     cursor=mycon.cursor()
@@ -96,20 +97,20 @@ def pushintosql(sqlpass):
         mycon.commit()
     mycon.close()
 
-
 def sortByDisease():
     mycursor=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass, database="covid")
     cursor=mycursor.cursor()
-    cursor.execute("select xlocation, ylocation, Diabetes, Respiratoryillness, AbnormalBloodPressure from coviddataset")
+    cursor.execute("select xlocation, ylocation, Diabetes, Respiratoryillness, AbnormalBloodPressure, Outcome from coviddataset")
     record= cursor.fetchall()
     
     l=[["X","Y","Diabetes","Respiratory","BP"]]
     bplist,rlist,dblist=[],[],[]
     labels=[]
+    dictionary={}
     
     for i in range(1,21):
         for j in range(1,21):
-            a,b,c=0,0,0
+            a,b,c,d=0,0,0,0
             for item in record:
                 if item[0]==i and item[1]==j and item[2]=='True': #diabetes
                     a+=1
@@ -117,16 +118,24 @@ def sortByDisease():
                     b+=1
                 elif item[0]==i and item[1]==j and item[4]=='True': #BP
                     c+=1
+                elif item[0]==i and item[1]==j and item[5]=='DEAD': #No. of dead ppl
+                    d+=1
+                
             l.append([i,j,a,b,c])
             dblist.append(a)
             rlist.append(b)
             bplist.append(c)
             labels.append(str(i)+','+str(j))
+            
+            score = a + 2*b + 2*c +d #this score will be used to dertermine necessity of vaccine(higher = greater need)
+            dictionary[str(i)+','+str(j)] = score
+    
+    #tabulate the number of diseases per zone in a txt file
     table=tabulate(l)
     with open("Output_Files/Zone Comorbidities.txt",'w') as f:
         f.writelines(table)
     
-    
+    #represent the number of diseases per zone as a bar graph:
     width=0.5
     fig,ax=plt.subplots()
     ax.bar(labels,dblist,width, label="Diabetes")
@@ -140,8 +149,11 @@ def sortByDisease():
     ax.legend()
     plt.show()
 
-    
-
+    #sorting the dictionary to put the highest score first
+    sorted_dict = sorted(dictionary.items(), key=operator.itemgetter(1),reverse=True)
+    table2=tabulate(sorted_dict)
+    with open("Output_Files/vaccine_priority.txt",'w') as f:
+        f.writelines(table2)
 
 def zonewise(zone,tableordata):
         returnlist=[]
@@ -313,8 +325,7 @@ def zonewise(zone,tableordata):
                 print(msg)
         if tableordata==0:
                 return population,noofcases,populationinfectedp,age1,age2,age3,dbcount,respicount,bpcount,com5,death,deathperc,comdeath4,comdeath9,comdeath10,aged1,aged2,aged3
-            
-            
+                      
 def generatereportfor400zones():
         if os.path.isfile('Output_Files/zonewisereport.csv'):
                 return
@@ -330,6 +341,7 @@ def generatereportfor400zones():
                 csvw.writerow([z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r])
                 f1.flush()
         f1.close()
+
 def intensitymap():
     mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
     cursor=mycon.cursor()
@@ -635,7 +647,7 @@ def Basic_city_age():
         drate=round(((death/count)*100),2)
         rrate=round(((recovered/count)*100),2)
         age=str(a)+'-'+str(b)
-        f=open("Basic-Age.txt","a")
+        f=open("Output_Files/Basic-Age.txt","a")
         f.writelines([age+'\t',str(count)+'\t\t',str(death)+'\t',str(drate)+'\t\t',str(recovered)+'\t\t',str(rrate)+'\n'])
         f.close()
 
@@ -717,10 +729,7 @@ def Basic_city_age():
     plt.title("Coronavirus Deaths - AGE ")
     plt.pie(dead,labels=age,autopct='%1.1f%%',colors=colors,explode=expand,shadow=True)
     plt.show()
-   
-import matplotlib.pyplot as plt
-from matplotlib_venn import venn3
-import mysql.connector
+
 def venncasescity():
     mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
     cursor=mycon.cursor()
@@ -767,7 +776,6 @@ def venncasescity():
     plt.title(t)
     plt.show()
  
-
 def venndeathscity():
     mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
     cursor=mycon.cursor()
@@ -920,32 +928,32 @@ def venncases(zone):
     plt.title(t)
     plt.show()
     
- def showgraphbasedoncasesreportedperday(zone):#Plot a graph based on daily cases in a zone
+def showgraphbasedoncasesreportedperday(zone): #Plot a graph based on daily cases in a zone
+    mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
+    cursor=mycon.cursor()
+    cursor.execute("Select count(*) from coviddataset where zone=%s"%(zone))
+    rec=cursor.fetchall()
+    for i in rec:
+        if i[0]==0:
+            print('No cases')
+            return
         
-        mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
-        cursor=mycon.cursor()
-        cursor.execute("Select count(*) from coviddataset where zone=%s"%(zone))
+    x=[]
+    y=[]
+    for i in range(239):
+        x.append(i)
+        cursor.execute("select count(*) from coviddataset where zone=%s and Timeofinfection=%s"%(zone,i))
         rec=cursor.fetchall()
-        for i in rec:
-             if i[0]==0:
-                     print('No cases')
-                     return
+        for j in rec:
+            y.append(j[0])
+    plt.plot(x,y,color='blue')
         
-        x=[]
-        y=[]
-        for i in range(239):
-                x.append(i)
-                cursor.execute("select count(*) from coviddataset where zone=%s and Timeofinfection=%s"%(zone,i))
-                rec=cursor.fetchall()
-                for j in rec:
-                        y.append(j[0])
-        plt.plot(x,y,color='blue')
-        
-        plt.xlabel('Day')
-        plt.ylabel('Number of cases per day')
-        t='Daywise cases of zone'+str(zone)
-        plt.title(t)
-        plt.show()
+    plt.xlabel('Day')
+    plt.ylabel('Number of cases per day')
+    t='Daywise cases of zone'+str(zone)
+    plt.title(t)
+    plt.show()
+
 def zonewisedaywise():#Creating a table called zonewise daywise in mysql and inserting the zone,day and the number of cases in a day in a zone
     mycon=mysql.connector.connect(host="localhost",user="root",passwd="sql123",database="covid")
     cursor=mycon.cursor()
@@ -970,15 +978,8 @@ def zonewisedaywise():#Creating a table called zonewise daywise in mysql and ins
                 c=i[0]
             cursor.execute("Insert into zonewisedaywise values (%s,%s,%s)"%(zo,da,c))
             mycon.commit()
-        
-    
-
-
-
-    
-    
-    
- def graphcumm(zone):#Graph which shows cumulative cases of a zone
+          
+def graphcumm(zone):#Graph which shows cumulative cases of a zone
     import mysql.connector
     import numpy as np
     import matplotlib.pyplot as plt
@@ -1007,6 +1008,7 @@ def zonewisedaywise():#Creating a table called zonewise daywise in mysql and ins
     plt.ylabel('Number of cases')
     plt.title(t)
     plt.show()
+
 def cummgraphofentirecity():#Cumulative graph of entire city
     import matplotlib.pyplot as plt
     import mysql.connector
@@ -1342,8 +1344,7 @@ def dailycasescity():
     plt.title("Daily cases  of city")
     plt.show()
     
-    
-        
+
 sqlpass = input("Enter SQL Password ")
 numberlocations()
 pushintosql(sqlpass)
