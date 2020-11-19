@@ -98,7 +98,7 @@ def pushintosql():
     mycon.close()
 
 def sortByDisease():
-    mycursor=mysql.connector.connect(host="localhost",user="root",passwd=sqlpass, database="covid")
+    mycursor=mysql.connector.connect(host="localhost",user="root",passwd='sql123', database="covid")
     cursor=mycursor.cursor()
     cursor.execute("select xlocation, ylocation, Diabetes, Respiratoryillness, AbnormalBloodPressure, Outcome from coviddataset")
     record= cursor.fetchall()
@@ -147,7 +147,7 @@ def sortByDisease():
     ax.set_title('Co-morbidities per Zone')
 
     ax.legend()
-    plt.show()
+    #plt.show()
 
     #sorting the dictionary to put the highest score first
     sorted_dict = sorted(dictionary.items(), key=operator.itemgetter(1),reverse=True)
@@ -2514,7 +2514,8 @@ def zonewiseplots():
         print("2.Daily graph of a zone")
         print("3.Analysis of cases with comorbidities of a zone")
         print("4.Analysis of deaths with comorbidities of a zone")
-        print("5.Exit")
+        print("5.Generate a zones report")
+        print('6.Exit')
         try:
             
            ch=int(input("Enter a choice"))
@@ -2567,7 +2568,20 @@ def zonewiseplots():
             elif zone>=1 and zone<=400:
                 venndeaths(zone)
         elif ch==5:
+            try:
+               zone=int(input("Enter a zone"))
+             except:
+                 print("An error has occured")
+                 break
+            
+            if zone<1 or zone>400:
+                print("Zone does not exist")
+            elif zone>=1 and zone<=400:
+                zonewise(zone,1)
+            
+        elif ch==6:
             break
+           
         else:
             print("Invalid choice")
             
@@ -2610,3 +2624,5 @@ numberlocations()
 pushintosql()
 zonewisedaywise()
 generatereportfor400zones()
+sortByDisease()
+main()
