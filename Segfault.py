@@ -1,6 +1,6 @@
 import pip,csv,os,sys,operator
 
-def install(name):
+def install(name): #function used to install missing libraries
     if hasattr(pip, 'main'):
         pip.main(['install', name])
     else:
@@ -1625,8 +1625,6 @@ def Diabetes_covidmap():
     T1.forward(200)
     T1.showturtle()
     
- 
-
 def Respiratory_covidmap():
     # import package and making objects 
     import turtle
