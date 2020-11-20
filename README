@@ -1,0 +1,3 @@
+Hi there, here you will find the code for the NPS Chennai team's entry to Segfault Mathrix 2020. 
+The code sorts out the given data in forms of various graphs that makes it easier to read and understand.
+To run the code you, download / clone this repository. While running the code you will have to input the password to your MySQL server in order for queries to be possible.
